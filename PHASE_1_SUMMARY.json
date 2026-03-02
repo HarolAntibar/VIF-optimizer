@@ -1,0 +1,224 @@
+{
+  "document_title": "Phase 1 Intelligence Summary — High-Ticket VIF Optimizer",
+  "classification": "CONFIDENTIAL",
+  "phase": "Phase 1 — Diagnostic Engine",
+  "status": "CLOSED",
+  "closure_date": "2026-02-22",
+  "analytical_engine": {
+    "language": "Python 3.13",
+    "libraries": {
+      "pandas": "3.0.1",
+      "numpy": "2.4.2",
+      "statsmodels": "0.14.6",
+      "tabulate": "0.9.0",
+      "fpdf2": "2.8.6"
+    }
+  },
+
+  "dataset": {
+    "file": "data/marketing_budget_2025.csv",
+    "observations": 200,
+    "predictor_variables": 7,
+    "dependent_variable": "Monthly_Revenue",
+    "currency": "USD",
+    "random_seed": 42,
+    "null_values": 0,
+    "size_bytes": 24816
+  },
+
+  "vif_analysis": {
+    "method": "statsmodels.stats.outliers_influence.variance_inflation_factor",
+    "intercept_included": true,
+    "intercept_column_index": 0,
+    "ranking": "descending by VIF score",
+    "severity_thresholds": {
+      "ACCEPTABLE": "1.0 to 4.9",
+      "ELEVATED":   "5.0 to 9.9",
+      "HIGH":       "10.0 to 29.9",
+      "CRITICAL":   "30.0 and above"
+    },
+    "results": [
+      {
+        "rank": 1,
+        "variable": "Social_Media_Spend",
+        "vif_score": 41.2596,
+        "auxiliary_r_squared": 0.97574,
+        "severity": "CRITICAL",
+        "threshold_breached": 30.0,
+        "variance_inflation": "Estimated coefficient variance is 41.26x greater than it would be under full orthogonality. The OLS estimator cannot isolate this channel's marginal revenue contribution.",
+        "remediation": "Composite index construction with Influencer_Fees, or PCA-based dimensionality reduction"
+      },
+      {
+        "rank": 2,
+        "variable": "Influencer_Fees",
+        "vif_score": 41.1993,
+        "auxiliary_r_squared": 0.97571,
+        "severity": "CRITICAL",
+        "threshold_breached": 30.0,
+        "variance_inflation": "Estimated coefficient variance is 41.20x greater than it would be under full orthogonality. Statistically indistinguishable from Social_Media_Spend in the current design matrix.",
+        "remediation": "Composite index construction with Social_Media_Spend, domain-driven elimination, or PCA"
+      },
+      {
+        "rank": 3,
+        "variable": "TV_Spend",
+        "vif_score": 1.0569,
+        "auxiliary_r_squared": 0.05383,
+        "severity": "ACCEPTABLE",
+        "threshold_breached": null,
+        "variance_inflation": "1.06x — effectively orthogonal. Coefficient estimate is stable and reliable.",
+        "remediation": "None required"
+      },
+      {
+        "rank": 4,
+        "variable": "SEO_Budget",
+        "vif_score": 1.0529,
+        "auxiliary_r_squared": 0.05026,
+        "severity": "ACCEPTABLE",
+        "threshold_breached": null,
+        "variance_inflation": "1.05x — effectively orthogonal. Coefficient estimate is stable and reliable.",
+        "remediation": "None required"
+      },
+      {
+        "rank": 5,
+        "variable": "Digital_Display_Spend",
+        "vif_score": 1.0428,
+        "auxiliary_r_squared": 0.04108,
+        "severity": "ACCEPTABLE",
+        "threshold_breached": null,
+        "variance_inflation": "1.04x — effectively orthogonal. Coefficient estimate is stable and reliable.",
+        "remediation": "None required"
+      },
+      {
+        "rank": 6,
+        "variable": "Radio_Spend",
+        "vif_score": 1.0362,
+        "auxiliary_r_squared": 0.03499,
+        "severity": "ACCEPTABLE",
+        "threshold_breached": null,
+        "variance_inflation": "1.04x — effectively orthogonal. Coefficient estimate is stable and reliable.",
+        "remediation": "None required"
+      },
+      {
+        "rank": 7,
+        "variable": "Email_Marketing_Spend",
+        "vif_score": 1.0168,
+        "auxiliary_r_squared": 0.01654,
+        "severity": "ACCEPTABLE",
+        "threshold_breached": null,
+        "variance_inflation": "1.02x — nearest to the ideal orthogonal baseline of VIF=1.0.",
+        "remediation": "None required"
+      }
+    ]
+  },
+
+  "severity_distribution": {
+    "CRITICAL":   2,
+    "HIGH":       0,
+    "ELEVATED":   0,
+    "ACCEPTABLE": 5,
+    "total_variables": 7,
+    "pct_flagged": "28.6%"
+  },
+
+  "audit_metrics": {
+    "peak_vif":                      41.2596,
+    "min_vif":                        1.0168,
+    "mean_vif_all":                   6.9522,
+    "mean_vif_critical_variables":   41.2295,
+    "mean_vif_acceptable_variables":  1.0411,
+    "variables_exceeding_vif_5":      2,
+    "variables_exceeding_vif_10":     2,
+    "variables_exceeding_vif_30":     2,
+    "overall_verdict": "CRITICAL — mandatory remediation required before any regression training or budget attribution model is deployed"
+  },
+
+  "correlation_matrix": {
+    "variables": [
+      "TV_Spend",
+      "Radio_Spend",
+      "Social_Media_Spend",
+      "Influencer_Fees",
+      "Digital_Display_Spend",
+      "Email_Marketing_Spend",
+      "SEO_Budget"
+    ],
+    "matrix": {
+      "TV_Spend":              [  1.0000, -0.0259, -0.1440, -0.1261,  0.0592,  0.0488,  0.1181 ],
+      "Radio_Spend":           [ -0.0259,  1.0000, -0.1264, -0.1371,  0.0678, -0.0389, -0.0797 ],
+      "Social_Media_Spend":    [ -0.1440, -0.1264,  1.0000,  0.9873,  0.0192, -0.0141,  0.0376 ],
+      "Influencer_Fees":       [ -0.1261, -0.1371,  0.9873,  1.0000,  0.0385, -0.0022,  0.0288 ],
+      "Digital_Display_Spend": [  0.0592,  0.0678,  0.0192,  0.0385,  1.0000, -0.0147, -0.1304 ],
+      "Email_Marketing_Spend": [  0.0488, -0.0389, -0.0141, -0.0022, -0.0147,  1.0000,  0.0914 ],
+      "SEO_Budget":            [  0.1181, -0.0797,  0.0376,  0.0288, -0.1304,  0.0914,  1.0000 ]
+    },
+    "notable_pairs": [
+      {
+        "variable_a": "Social_Media_Spend",
+        "variable_b": "Influencer_Fees",
+        "pearson_r": 0.9873,
+        "abs_r": 0.9873,
+        "risk_classification": "CRITICAL — near-perfect positive linear dependence",
+        "interpretation": "97.5% of the variance in each variable is shared with the other, driving both VIF scores to 41+. This is the primary collinearity condition requiring immediate remediation."
+      },
+      {
+        "variable_a": "TV_Spend",
+        "variable_b": "Social_Media_Spend",
+        "pearson_r": -0.1440,
+        "abs_r": 0.1440,
+        "risk_classification": "NEGLIGIBLE — weak negative correlation",
+        "interpretation": "Minor negative relationship; no material impact on VIF. No action required."
+      },
+      {
+        "variable_a": "Radio_Spend",
+        "variable_b": "Influencer_Fees",
+        "pearson_r": -0.1371,
+        "abs_r": 0.1371,
+        "risk_classification": "NEGLIGIBLE — weak negative correlation",
+        "interpretation": "Minor negative relationship; no material impact on VIF. No action required."
+      },
+      {
+        "variable_a": "Digital_Display_Spend",
+        "variable_b": "SEO_Budget",
+        "pearson_r": -0.1304,
+        "abs_r": 0.1304,
+        "risk_classification": "NEGLIGIBLE — weak negative correlation",
+        "interpretation": "Minor negative relationship; no material impact on VIF. No action required."
+      }
+    ]
+  },
+
+  "primary_deliverable": {
+    "file": "output/Budget_Audit_Report_2025.pdf",
+    "pages": 5,
+    "size_bytes": 108295,
+    "size_kb": 105.76,
+    "md5_checksum": "522948f56ff7c9ab00849e5d566b0290",
+    "pdf_header_valid": true,
+    "pdf_eof_marker_present": true,
+    "integrity_verdict": "VALID — document is specification-compliant and delivery-ready",
+    "sections": [
+      "Cover Page — Full-bleed navy, severity key, analytical epigraph",
+      "I.  Strategic Executive Summary — VIF as capital efficiency diagnostic",
+      "II. VIF Analysis Results — Colour-coded severity table, KPI metric boxes",
+      "III.Recommended Action Plan — Composite Index, PCA, Ridge, Pipeline Gating",
+      "IV. Methodology & Technical Appendix — VIF formula, threshold rationale"
+    ]
+  },
+
+  "phase_2_mandate": {
+    "name": "Remediation Engine",
+    "status": "AWAITING INSTRUCTION",
+    "objective": "Design, implement, and validate multicollinearity remediation strategies that drive all predictor VIF scores below 5.0, restoring the dataset to a model-ready state.",
+    "primary_targets": [
+      "Social_Media_Spend  (VIF = 41.2596)",
+      "Influencer_Fees     (VIF = 41.1993)"
+    ],
+    "candidate_strategies": [
+      "Composite Index Construction — weighted average of the two collinear channels",
+      "Principal Component Analysis — orthogonal decomposition of the collinear subspace",
+      "Domain-Driven Variable Elimination — remove the lower-signal variable entirely",
+      "Ridge Regression (L2) — interim stabilisation of coefficient estimates pending structural fix"
+    ],
+    "success_criterion": "All seven (or restructured) predictor VIF scores verified below 5.0 via automated recomputation and documented in a Phase 2 audit report."
+  }
+}
