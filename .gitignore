@@ -1,0 +1,4 @@
+ARCHITECTURE.md
+.claudeignore
+.venv/
+__pycache__/

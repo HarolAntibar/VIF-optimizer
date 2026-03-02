@@ -1,0 +1,13 @@
+node_modules/
+.venv/
+.git/
+__pycache__/
+build/
+dist/
+*.log
+*.csv
+*.xlsx
+.env
+# Evitar que Claude lea su propia configuración o la arquitectura
+.claudeignore
+ARCHITECTURE.md
